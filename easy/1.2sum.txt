@@ -1,0 +1,105 @@
+
+*******************************************************************
+
+https://leetcode.com/problems/two-sum/description/
+
+
+###################################################################################
+
+Step 1: Brute Force Approach:
+The simplest approach is to use two nested loops to check every pair of numbers and see if their sum equals the target.
+
+Algorithm:
+Use two nested loops:
+The outer loop iterates through each element (nums[i]).
+The inner loop checks every subsequent element (nums[j]) to find if the sum of nums[i] and nums[j] equals the target.
+If such a pair is found, return the indices i and j.
+
+Code:
+vector<int> twoSum(vector<int>& nums, int target) {
+    int n = nums.size();
+    for(int i = 0; i < n; i++) {
+        for(int j = i + 1; j < n; j++) {
+            if(nums[i] + nums[j] == target) {
+                return {i, j};
+            }
+        }
+    }
+    return {-1, -1}; // No solution found
+}
+
+
+Time Complexity:
+
+O(n²): The outer loop runs n times, and for each iteration, the inner loop runs up to n - 1 times.
+This results in quadratic time complexity, which is inefficient for large arrays.
+
+
+Space Complexity:
+
+O(1): No additional space is used apart from variables.
+
+
+Drawbacks:
+The brute force approach is slow due to its quadratic complexity, especially for large inputs. Hence, we aim to optimize it.
+
+
+
+Step 2: Optimal Approach (Using Hashing):
+To optimize, we can reduce the problem of finding two numbers to a lookup problem using a hash map.
+
+Intuition:
+Instead of iterating through the array twice, we can use a hash map to store elements as we iterate.
+For every number num1 at index i, calculate the required number num2 = target - num1 to achieve the target.
+Check if num2 exists in the hash map:
+If yes, we've found the pair and can return their indices.
+If no, store the current number num1 with its index in the hash map for future lookups.
+Algorithm:
+Initialize an empty hash map mp to store numbers and their indices.
+Traverse the array:
+For each number nums[i], compute num2 = target - nums[i].
+Check if num2 exists in the map:
+If found, return the indices {i, mp[num2]}.
+Otherwise, store the current number nums[i] with its index in the map: mp[nums[i]] = i.
+If no solution exists, return {-1, -1}.
+
+
+Code:
+vector<int> twoSum(vector<int>& nums, int target) {
+    int n = nums.size();
+    unordered_map<int, int> mp;
+    for (int i = 0; i < n; i++) {
+        int num1 = nums[i];
+        int num2 = target - nums[i];
+        if (mp.find(num2) != mp.end()) {
+            return {i, mp[num2]};
+        }
+        mp[num1] = i;
+    }
+    return {-1, -1};
+}
+
+
+Time Complexity:
+O(n): We traverse the array once, performing a constant-time hash map operation (insert/find) for each element.
+Space Complexity:
+O(n): The hash map can store up to n elements in the worst case.
+
+
+Intuition Behind Reducing Complexity:
+
+Goal: Reduce redundant computations by leveraging data structures like a hash map.
+Reasoning:
+In the brute force approach, we repeatedly search for the complement num2 by iterating through the array. This leads to unnecessary comparisons.
+A hash map allows us to store previously seen numbers, so we can instantly check for num2 in O(1) time instead of iterating over the array again.
+Outcome: This drastically reduces the number of operations from O(n²) to O(n), making the algorithm scalable for large inputs.
+
+
+Key Points to Emphasize During Explanation:
+
+Start with the brute force solution and highlight its inefficiency for larger datasets.
+Introduce the hash map solution as a way to optimize by avoiding repeated comparisons.
+Explain how the hash map enables instant lookups, reducing the time complexity to O(n).
+Mention the trade-off: the optimal solution uses additional space (O(n)) for the hash map.
+
+
